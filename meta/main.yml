@@ -1,6 +1,6 @@
 galaxy_info:
-  author: your name
-  description: your description
+  author: Ionut Maxim
+  description: Ansible Role to deploy SQL Server Express 2014
   company: your company (optional)
 
   # If the issue tracker for your role is not on github, uncomment the
@@ -179,7 +179,7 @@ galaxy_info:
   #  - stretch
   #  - wheezy
 
-  galaxy_tags: []
+  galaxy_tags: [sql, windows]
     # List tags for your role here, one per line. A tag is
     # a keyword that describes and categorizes the role.
     # Users find roles by searching for tags. Be sure to
