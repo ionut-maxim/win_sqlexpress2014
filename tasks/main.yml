@@ -23,7 +23,7 @@
     path: "{{ temp_folder }}win_sqlexpress2014\\setup.exe"
 - name: cleanup
   win_file:
-    path: {{ item }}
+    path: "{{ item }}"
     state: absent
   with_items:
     - "{{ temp_folder }}win_sqlexpress2014"
