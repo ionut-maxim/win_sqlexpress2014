@@ -1,2 +1,18 @@
 ---
 # tasks file for win_sqlexpress
+- name: net-framework-35
+    win_feature:
+    name: NET-Framework-Core
+    state: present
+- name: download-source-files
+    win_get_url:
+    dest: "C:\\Windows\\Temp\\SQLEXPRWT_x64_ENU.exe"
+    url: "http://download.microsoft.com/download/E/A/E/EAE6F7FC-767A-4038-A954-49B8B05D04EB/ExpressAndTools%2064BIT/SQLEXPRWT_x64_ENU.exe"
+- name: extract-source-files
+    raw: "Start-Process -FilePath \"C:\\Windows\\Temp\\SQLEXPRWT_x64_ENU.exe\" -ArgumentList \"/q /x:C:\\Windows\\Temp\\SQLEXPRESS\" -Wait"
+- name: install
+    win_package:
+    Arguments: "/IACCEPTSQLSERVERLICENSETERMS /Q /ACTION=INSTALL /INSTANCEID=SQLEXPRESS /INSTANCENAME=SQLEXPRESS /UPDATEENABLED=FALSE"
+    Product_Id: "{17531BCD-C627-46A2-9F1E-7CC920E0E94A}"
+    name: "SQL Server 2014 Express"
+    path: "C:\\windows\\temp\\SQLEXPRESS\\setup.exe"
