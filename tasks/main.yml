@@ -7,7 +7,7 @@
 - name: check-downloaded-file
   win_stat:
     path: "{{ temp_folder }}SQLEXPRWT_x64_ENU.exe"
-    register: installer_file
+  register: installer_file
 - name: download-source-files
   win_get_url:
     dest: "{{ temp_folder }}SQLEXPRWT_x64_ENU.exe"
