@@ -16,7 +16,7 @@ To add
 Dependencies
 ------------
 
-Nonte yet
+None yet
 
 Example Playbook
 ----------------
@@ -35,4 +35,4 @@ BSD
 Author Information
 ------------------
 
-Ionut Maxim.
+Ionut Maxim
