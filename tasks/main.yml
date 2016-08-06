@@ -13,8 +13,13 @@
     dest: "{{ temp_folder }}win_sqlexpress2014.exe"
     url: "http://download.microsoft.com/download/E/A/E/EAE6F7FC-767A-4038-A954-49B8B05D04EB/ExpressAndTools%2064BIT/SQLEXPRWT_x64_ENU.exe"
   when: not installer_file.stat.exists
+- name: check-downloaded-file
+  win_stat:
+    path: "{{ temp_folder }}win_sqlexpress2014\\setup.exe"
+  register: extracted_file
 - name: extract-source-files
   raw: "Start-Process -FilePath '{{ temp_folder }}win_sqlexpress2014.exe' -ArgumentList '/q /x:{{ temp_folder }}win_sqlexpress2014' -Wait"
+  when: not extracted_file.stat.exists
 - name: install
   win_package:
     Arguments: "/IACCEPTSQLSERVERLICENSETERMS /Q /ACTION=INSTALL /INSTANCEID={{ instance }} /INSTANCENAME={{ instance }} /UPDATEENABLED=FALSE"
