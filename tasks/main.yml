@@ -6,18 +6,25 @@
     state: present
 - name: check-downloaded-file
   win_stat:
-    path: "{{ temp_folder }}SQLEXPRWT_x64_ENU.exe"
+    path: "{{ temp_folder }}win_sqlexpress2014.exe"
   register: installer_file
 - name: download-source-files
   win_get_url:
-    dest: "{{ temp_folder }}SQLEXPRWT_x64_ENU.exe"
+    dest: "{{ temp_folder }}win_sqlexpress2014.exe"
     url: "http://download.microsoft.com/download/E/A/E/EAE6F7FC-767A-4038-A954-49B8B05D04EB/ExpressAndTools%2064BIT/SQLEXPRWT_x64_ENU.exe"
   when: not installer_file.stat.exists
 - name: extract-source-files
-  raw: "Start-Process -FilePath '{{ temp_folder }}SQLEXPRWT_x64_ENU.exe' -ArgumentList '/q /x:{{ temp_folder }}SQLEXPRESS' -Wait"
+  raw: "Start-Process -FilePath '{{ temp_folder }}win_sqlexpress2014.exe' -ArgumentList '/q /x:{{ temp_folder }}win_sqlexpress2014' -Wait"
 - name: install
   win_package:
-    Arguments: "/IACCEPTSQLSERVERLICENSETERMS /Q /ACTION=INSTALL /INSTANCEID=SQLEXPRESS /INSTANCENAME=SQLEXPRESS /UPDATEENABLED=FALSE"
+    Arguments: "/IACCEPTSQLSERVERLICENSETERMS /Q /ACTION=INSTALL /INSTANCEID={{ instance }} /INSTANCENAME={{ instance }} /UPDATEENABLED=FALSE"
     Product_Id: "{17531BCD-C627-46A2-9F1E-7CC920E0E94A}"
-    name: "SQL Server 2014 Express"
-    path: "{{ temp_folder }}SQLEXPRESS\\setup.exe"
+    name: "win_sqlexpress2014"
+    path: "{{ temp_folder }}win_sqlexpress2014\\setup.exe"
+- name: cleanup
+  win_file:
+    path: {{ item }}
+    state: absent
+  with_items:
+    - "{{ temp_folder }}win_sqlexpress2014"
+    - "{{ temp_folder }}win_sqlexpress2014.exe"

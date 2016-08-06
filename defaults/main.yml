@@ -1,3 +1,4 @@
 ---
 # defaults file for win_sqlexpress
 temp_folder: '{{ ansible_env.windir }}\\TEMP\\'
+instance: SQLEXPRESS
