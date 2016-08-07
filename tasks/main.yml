@@ -6,41 +6,41 @@
     state: present
 - name: check-downloaded-file
   win_stat:
-    path: "{{ ansible_env.windir }}\\win_sqlexpress2014\\installer.exe"
+    path: "{{ ansible_env.TEMP }}\\installer.exe"
   register: installer_file
 - name: download-source-files
   win_get_url:
-    dest: "{{ ansible_env.windir }}\\win_sqlexpress2014\\installer.exe"
+    dest: "{{ ansible_env.TEMP }}\\installer.exe"
     url: "http://download.microsoft.com/download/E/A/E/EAE6F7FC-767A-4038-A954-49B8B05D04EB/ExpressAndTools%2064BIT/SQLEXPRWT_x64_ENU.exe"
   when: not installer_file.stat.exists
 - name: download-psappdeploytoolkit
   win_get_url:
-    dest: "{{ ansible_env.windir }}\\win_sqlexpress2014\\psappdeploytoolkit.zip"
+    dest: "{{ ansible_env.TEMP }}\\psappdeploytoolkit.zip"
     url: "https://github.com/PSAppDeployToolkit/PSAppDeployToolkit/releases/download/3.6.8/PSAppDeployToolkit_v3.6.8.zip"
 - name: extract-psappdeploytoolkit
   win_unzip:
-    src: "{{ ansible_env.windir }}\\win_sqlexpress2014\\psappdeploytoolkit.zip"
-    dest: "{{ ansible_env.windir }}\\win_sqlexpress2014"
+    src: "{{ ansible_env.TEMP }}\\psappdeploytoolkit.zip"
+    dest: "{{ ansible_env.TEMP }}"
     rm: true
     recurse: yes
 - name: check-downloaded-file
   win_stat:
-    path: "{{ ansible_env.windir }}\\win_sqlexpress2014\\PSAppDeployToolkit_v3.6.8\\Toolkit\\Files\\setup.exe"
+    path: "{{ ansible_env.TEMP }}\\PSAppDeployToolkit_v3.6.8\\Toolkit\\Files\\setup.exe"
   register: extracted_file
 - name: extract-source-files
-  raw: "Start-Process -FilePath '{{ ansible_env.windir }}\\win_sqlexpress2014\\installer.exe' -ArgumentList '/q /x:{{ ansible_env.windir }}\\win_sqlexpress2014\\PSAppDeployToolkit_v3.6.8\\Toolkit\\Files' -Wait"
+  raw: "Start-Process -FilePath '{{ ansible_env.TEMP }}\\installer.exe' -ArgumentList '/q /x:{{ ansible_env.TEMP }}\\PSAppDeployToolkit_v3.6.8\\Toolkit\\Files' -Wait"
   when: not extracted_file.stat.exists
 - name: deploy-application-template
   template:
     src: Deploy-Application.ps1.j2
-    dest: "{{ ansible_env.windir }}\\win_sqlexpress2014\\PSAppDeployToolkit_v3.6.8\\Toolkit\\Deploy-Application.ps1"
+    dest: "{{ ansible_env.TEMP }}\\PSAppDeployToolkit_v3.6.8\\Toolkit\\Deploy-Application.ps1"
 - name: install
   win_package:
     Arguments: "-DeploymentType Install -DeployMode Silent"
     Product_Id: "{17531BCD-C627-46A2-9F1E-7CC920E0E94A}"
     name: "win_sqlexpress2014"
-    path: "{{ ansible_env.windir }}\\win_sqlexpress2014\\PSAppDeployToolkit_v3.6.8\\Toolkit\\Deploy-Application.Exe"
+    path: "{{ ansible_env.TEMP }}\\PSAppDeployToolkit_v3.6.8\\Toolkit\\Deploy-Application.Exe"
 #- name: cleanup
 #  win_file:
-#    path: "{{ ansible_env.windir }}\\win_sqlexpress2014"
+#    path: "{{ ansible_env.TEMP }}"
 #    state: absent
