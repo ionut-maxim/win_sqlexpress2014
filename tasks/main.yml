@@ -19,7 +19,7 @@
     url: "https://github.com/PSAppDeployToolkit/PSAppDeployToolkit/releases/download/3.6.8/PSAppDeployToolkit_v3.6.8.zip"
 - name: extract-psappdeploytoolkit
   win_unzip:
-    src: "{{ ansible_env.temp }}\\win_sqlexpress2014\psappdeploytoolkit.zip"
+    src: "{{ ansible_env.temp }}\\win_sqlexpress2014\\psappdeploytoolkit.zip"
     dest: "{{ ansible_env.temp }}\\win_sqlexpress2014"
     rm: true
     recurse: yes
