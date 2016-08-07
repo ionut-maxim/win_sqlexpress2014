@@ -117,7 +117,7 @@ Try {
 		##*===============================================
 		[string]$installPhase = 'Installation'
 		
-        Execute-ProcessAsUser -UserName '{{ ansible_user }}' -Path "$dirFiles\setup.exe" `
+        Execute-ProcessAsUser -Path "$dirFiles\setup.exe" `
             -Parameters '/IACCEPTSQLSERVERLICENSETERMS /Q /ACTION=INSTALL /INSTANCEID={{ instance }} /INSTANCENAME={{ instance }} /UPDATEENABLED=FALSE' `
             -RunLevel HighestAvailable -Wait -ContinueOnError $false
 		
