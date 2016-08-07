@@ -13,6 +13,13 @@
     dest: "{{ ansible_env.TEMP }}\\installer.exe"
     url: "http://download.microsoft.com/download/E/A/E/EAE6F7FC-767A-4038-A954-49B8B05D04EB/ExpressAndTools%2064BIT/SQLEXPRWT_x64_ENU.exe"
   when: not installer_file.stat.exists
+- name: download-pcsx-msi
+  win_get_url:
+    url: 'http://download-codeplex.sec.s-msft.com/Download/Release?ProjectName=pscx&DownloadId=923562&FileTime=130585918034470000&Build=20959'
+    dest: '{{ ansible_env.TEMP }}\\pscx.msi'
+- name: install-pcsx
+  win_msi:
+    path: '{{ ansible_env.TEMP }}\\pscx.msi'
 - name: download-psappdeploytoolkit
   win_get_url:
     dest: "{{ ansible_env.TEMP }}\\psappdeploytoolkit.zip"
