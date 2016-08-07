@@ -24,12 +24,11 @@
   win_get_url:
     dest: "{{ ansible_env.TEMP }}\\psappdeploytoolkit.zip"
     url: "https://github.com/PSAppDeployToolkit/PSAppDeployToolkit/releases/download/3.6.8/PSAppDeployToolkit_v3.6.8.zip"
-#- name: extract-psappdeploytoolkit
-#  win_unzip:
-#    src: "{{ ansible_env.TEMP }}\\psappdeploytoolkit.zip"
-#    dest: "{{ ansible_env.TEMP }}"
-#    rm: true
-#    recurse: yes
+- name: extract-psappdeploytoolkit
+  win_unzip:
+    src: "{{ ansible_env.TEMP }}\\psappdeploytoolkit.zip"
+    dest: "{{ ansible_env.TEMP }}"
+    rm: true
 - name: check-downloaded-file
   win_stat:
     path: "{{ ansible_env.TEMP }}\\PSAppDeployToolkit_v3.6.8\\Toolkit\\Files\\setup.exe"
