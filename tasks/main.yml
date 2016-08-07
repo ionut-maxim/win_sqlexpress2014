@@ -6,30 +6,41 @@
     state: present
 - name: check-downloaded-file
   win_stat:
-    path: "{{ temp_folder }}win_sqlexpress2014.exe"
+    path: "{{ ansible_env.temp }}\\win_sqlexpress2014\\installer.exe"
   register: installer_file
 - name: download-source-files
   win_get_url:
-    dest: "{{ temp_folder }}win_sqlexpress2014.exe"
+    dest: "{{ ansible_env.temp }}\\win_sqlexpress2014\\installer.exe"
     url: "http://download.microsoft.com/download/E/A/E/EAE6F7FC-767A-4038-A954-49B8B05D04EB/ExpressAndTools%2064BIT/SQLEXPRWT_x64_ENU.exe"
   when: not installer_file.stat.exists
+- name: download-psappdeploytoolkit
+  win_get_url:
+    dest: "{{ ansible_env.temp }}\\win_sqlexpress2014\\psappdeploytoolkit.zip"
+    url: "https://github.com/PSAppDeployToolkit/PSAppDeployToolkit/releases/download/3.6.8/PSAppDeployToolkit_v3.6.8.zip"
+- name: extract-psappdeploytoolkit
+  win_unzip:
+    src: "{{ ansible_env.temp }}\\win_sqlexpress2014\psappdeploytoolkit.zip"
+    dest: "{{ ansible_env.temp }}\\win_sqlexpress2014"
+    rm: true
+    recurse: yes
 - name: check-downloaded-file
   win_stat:
-    path: "{{ temp_folder }}win_sqlexpress2014\\setup.exe"
+    path: "{{ ansible_env.temp }}\\win_sqlexpress2014\\PSAppDeployToolkit_v3.6.8\\Toolkit\\Files\\setup.exe"
   register: extracted_file
 - name: extract-source-files
-  raw: "Start-Process -FilePath '{{ temp_folder }}win_sqlexpress2014.exe' -ArgumentList '/q /x:{{ temp_folder }}win_sqlexpress2014' -Wait"
+  raw: "Start-Process -FilePath '{{ ansible_env.temp }}\\win_sqlexpress2014\\installer.exe' -ArgumentList '/q /x:{{ ansible_env.temp }}\\win_sqlexpress2014\\PSAppDeployToolkit_v3.6.8\\Toolkit\\Files' -Wait"
   when: not extracted_file.stat.exists
+- name: deploy-application-template
+  template:
+    src: Deploy-Application.ps1.j2
+    dest: "{{ ansible_env.temp }}\\win_sqlexpress2014\\PSAppDeployToolkit_v3.6.8\\Toolkit\\Deploy-Application.ps1"
 - name: install
   win_package:
-    Arguments: "/IACCEPTSQLSERVERLICENSETERMS /Q /ACTION=INSTALL /INSTANCEID={{ instance }} /INSTANCENAME={{ instance }} /UPDATEENABLED=FALSE"
+    Arguments: "-DeploymentType Install -DeployMode Silent"
     Product_Id: "{17531BCD-C627-46A2-9F1E-7CC920E0E94A}"
     name: "win_sqlexpress2014"
-    path: "{{ temp_folder }}win_sqlexpress2014\\setup.exe"
-- name: cleanup
-  win_file:
-    path: "{{ item }}"
-    state: absent
-  with_items:
-    - "{{ temp_folder }}win_sqlexpress2014"
-    - "{{ temp_folder }}win_sqlexpress2014.exe"
+    path: "{{ ansible_env.temp }}\\win_sqlexpress2014\\PSAppDeployToolkit_v3.6.8\\Toolkit\\Deploy-Application.Exe"
+#- name: cleanup
+#  win_file:
+#    path: "{{ ansible_env.temp }}\\win_sqlexpress2014"
+#    state: absent
