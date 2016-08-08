@@ -33,22 +33,12 @@
   template:
     src: Deploy-Application.ps1.j2
     dest: "{{ ansible_env.TEMP }}\\PSAppDeployToolkit_v3.6.8\\Toolkit\\Deploy-Application.ps1"
-#- name: deploy-winrm-template
-#  template:
-#    src: winrm-elevated.ps1.j2
-#    dest: "{{ ansible_env.TEMP }}\\winrm-elevated.ps1"
 - name: install
   win_package:
     Arguments: "-DeploymentType Install -DeployMode Silent"
     Product_Id: "{17531BCD-C627-46A2-9F1E-7CC920E0E94A}"
     name: "win_sqlexpress2014"
     path: "{{ ansible_env.TEMP }}\\PSAppDeployToolkit_v3.6.8\\Toolkit\\Deploy-Application.Exe"
-#- name: install
-#  win_package:
-#    Arguments: "-executionpolicy bypass -file \"{{ ansible_env.TEMP }}\\winrm-elevated.ps1.j2\" -username {{ ansible_user }} -password {{ ansible_password }} -encoded_command \"{{ ansible_env.TEMP }}\\PSAppDeployToolkit_v3.6.8\\Toolkit\\Files\\setup.exe /IACCEPTSQLSERVERLICENSETERMS /Q #/ACTION=INSTALL /INSTANCEID={{ instance }} /INSTANCENAME={{ instance }} /UPDATEENABLED=FALSE\""
-#    Product_Id: "{17531BCD-C627-46A2-9F1E-7CC920E0E94A}"
-#    name: "win_sqlexpress2014"
-#    path: "powershell.exe"
 - name: cleanup
   win_file:
     path: "{{ ansible_env.TEMP }}\\PSAppDeployToolkit_v3.6.8"
