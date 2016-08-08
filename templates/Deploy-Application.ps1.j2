@@ -117,7 +117,7 @@ Try {
 		##*===============================================
 		[string]$installPhase = 'Installation'
 		
-        Execute-ProcessAsUser -UserName 'Administrator' -Path "$dirFiles\setup.exe" `
+        Execute-ProcessAsUser -UserName 'System' -Path "$dirFiles\setup.exe" `
             -Parameters '/IACCEPTSQLSERVERLICENSETERMS /Q /ACTION=INSTALL /INSTANCEID={{ instance }} /INSTANCENAME={{ instance }} /UPDATEENABLED=FALSE' `
             -RunLevel HighestAvailable -Wait -ContinueOnError $false
 		
